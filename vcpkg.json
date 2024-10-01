@@ -1,0 +1,11 @@
+{
+    "name": "pocopengltowebgl",
+    "version": "0.1.0",
+    "dependencies": [
+      "opengl",
+      "glfw3",
+      "glad",
+      "glew",
+      "stb"
+    ]
+  }
