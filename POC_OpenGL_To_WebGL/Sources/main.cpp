@@ -9,7 +9,7 @@
 template <typename T>
 struct Point2D
 {
-	explicit Point2D(const T& x_ = 0, const T& y_ = 0)
+	Point2D(const T& x_ = 0, const T& y_ = 0)
 		: x(x_), y(y_)
 	{}
 
@@ -22,12 +22,33 @@ struct Point2D
 };
 
 template <typename T>
+struct Color3
+{
+	Color3(const T& r_ = 0, const T& g_ = 0, const T& b_ = 0)
+		: r(r_), g(g_), b(b_)
+	{}
+
+	Color3(const Color3& color)
+		: r(color.r), g(color.g), b(color.b)
+	{}
+
+	T r, g, b;
+};
+
+template <typename T>
+struct Vertex
+{
+	Point2D<T> position;
+	Color3<T> color;
+};
+
+template <typename T>
 class Triangle
 {
 public:
-	using point_type = Point2D<T>;
+	using vertex_type = Vertex<T>;
 
-	Triangle(const point_type& p0, const point_type& p1, const point_type& p2)
+	Triangle(const vertex_type& p0, const vertex_type& p1, const vertex_type& p2)
 		: m_points{{p0, p1, p2}}, m_vao(0), m_vbo(0)
 	{
 		load();
@@ -52,16 +73,19 @@ public:
 		glBufferData(GL_ARRAY_BUFFER, sizeof(m_points), m_points.data(), GL_STATIC_DRAW);
 
 		ShaderInfo shader[] = {
-			{GL_VERTEX_SHADER, "E:\\DEV\\POC_OpenGL_To_WebGL\\POC_OpenGL_To_WebGL\\triangle.vert"},
-			{GL_FRAGMENT_SHADER, "E:\\DEV\\POC_OpenGL_To_WebGL\\POC_OpenGL_To_WebGL\\triangle.frag"},
+			{GL_VERTEX_SHADER, "triangle.vert"},
+			{GL_FRAGMENT_SHADER, "triangle.frag"},
 			{GL_NONE, nullptr}
 		};
 
 		m_program = Shader::loadShaders(shader);
 		glUseProgram(m_program);
 
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(point_type), 0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_type), 0);
 		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_type), reinterpret_cast<char*>(nullptr) + sizeof(vertex_type::position));
+		glEnableVertexAttribArray(1);
 	}
 
 	void render() 
@@ -70,8 +94,12 @@ public:
 		glDrawArrays(GL_TRIANGLES, 0, m_points.size());
 	}
 
+	void update()
+	{
+	}
+
 private:
-	std::array<point_type, 3> m_points;
+	std::array<vertex_type, 3> m_points;
 	GLuint m_vao;
 	GLuint m_vbo;
 	GLuint m_program;
@@ -107,12 +135,12 @@ int main()
 	glViewport(0, 0, 800, 700);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-	using Point2Df = Point2D<float>;
+	using Vertexf = Vertex<float>;
 	using Trianglef = Triangle<float>;
 
-	Point2Df p0{ -0.8, -0.8 };
-	Point2Df p1{ 0, 0.8 };
-	Point2Df p2{ 0.8, -0.8 };
+	Vertexf p0{ {-0.8, -0.8}, {1., 0., 0.} };
+	Vertexf p1{ {0, 0.8}, { 0., 1., 0.} };
+	Vertexf p2{ {0.8, -0.8}, {0., 0., 1.} };
 
 	Triangle triangle(p0, p1, p2);
 
