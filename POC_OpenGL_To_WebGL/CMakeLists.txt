@@ -27,6 +27,7 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glad CONFIG REQUIRED)
+find_package(SDL2 CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
@@ -38,6 +39,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	GLEW::GLEW
 	glfw
 	glad::glad
+	SDL2::SDL2main
+	SDL2::SDL2
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
