@@ -1,10 +1,17 @@
 #include "Shader.h"
 
 #include <stdexcept>
-#include <glad/glad.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>
+
+#ifdef __EMSCRIPTEN__
+#include <SDL.h>
+#include <SDL_opengles2.h>
+#else
+#include <glad/glad.h>
+#endif
+
 
 std::string readShader(const char* filename)
 {

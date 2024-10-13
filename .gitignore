@@ -70,6 +70,7 @@ ScaffoldingReadMe.txt
 vcpkg/
 vcpkg_installed/
 build/
+web/
 
 # StyleCop
 StyleCopReport.xml
