@@ -2,6 +2,7 @@
 #define __main
 
 #include "Shader.h"	
+#include "Loglib/Log.h"
 
 #include <iostream>
 #include <array>
@@ -131,6 +132,7 @@ struct RenderContext
 {
 	GLFWwindow* window = nullptr;
 	Triangle<float> triangle;
+	Logger logger;
 };
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -146,6 +148,8 @@ void mainLoop(void* arg_)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	renderCtx->triangle.render();
+
+	renderCtx->logger.message("Info from web");
 
 	glfwSwapBuffers(renderCtx->window);
 	
@@ -261,9 +265,11 @@ int openglWindow()
 
 	Triangle triangle(p0, p1, p2);
 
+	Logger logger;
+
 #ifdef __EMSCRIPTEN__
-	RenderContext rc{ window, triangle };
-	emscripten_set_main_loop_arg(mainLoop, &rc, 60, 1);
+	RenderContext rc{ window, triangle, logger };
+	emscripten_set_main_loop_arg(mainLoop, &rc, 0, 1);
 #else
 	while (!glfwWindowShouldClose(window))
 	{
@@ -273,8 +279,10 @@ int openglWindow()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//triangle.render();
-		//glFlush();
+		triangle.render();
+		glFlush();
+
+		logger.message("Info from cpp");
 
 		////swap buffer at the end
 		glfwPollEvents();
