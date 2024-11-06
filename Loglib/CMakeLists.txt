@@ -26,7 +26,8 @@ endmacro()
 GroupSources(src)
 
 if(EMSCRIPTEN)
-    add_library(${PROJECT_NAME} STATIC ${SOURCES})
+    #add_library(${PROJECT_NAME} STATIC ${SOURCES}) #Link with a static library
+    add_library(${PROJECT_NAME} SHARED ${SOURCES}) #Link with a dynamic library
 
     set(CMAKE_EXECUTABLE_SUFFIX ".wasm")
 

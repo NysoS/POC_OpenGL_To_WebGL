@@ -49,6 +49,7 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 
 if(EMSCRIPTEN)
 	message("emscripten")
+
 	set(VCPKG_TARGET_ARCHITECTURE wasm32-emscripten)
 	set(CMAKE_TOOLCHAIN_FILE $ENV{EMSDK_HOME}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake)
 	set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
